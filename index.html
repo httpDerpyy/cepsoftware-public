@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP Software</title>
+
+</head>
+
+<body>
+
+    <h1>Calculadora Frete</h1>
+
+    <form style='display: flex; flex-direction: column; margin-right: 93%;'>
+
+        <label>CEP</label>
+        <input type='number' id='inputCEP'>
+
+        <br><br>
+        <label>Motoboy</label>
+        <input type='text' id='inputMotoboy'>
+
+        <br><br>
+        <label>Identificação</label>
+        <input type='text' id='inputIdentificar'>
+
+        <br>
+        <input type='button' value='Pesquisar' id='pesquisar'>
+
+    </form>
+
+    <br><br>
+    <b>Endereço:</b>
+    <label id='endereco'>Test</label>
+
+    <br><br>
+    <b>Distancia:</b>
+    <label id='distancia'>Test</label>
+
+    <br><br>
+    <b>Preço:</b>
+    <label id='preco'>Test</label>
+
+    <br><br>
+    <input type='button' value='Confirmar Operação' id='confirmar'>
+
+    <br><br>
+    <h2>Financeiro</h2>
+
+    <form id='financeiro' style='display: flex; flex-direction: column; padding: 5px;'>
+
+        <div id='financeiroExample' style='margin: 5px;'>
+
+            <b>Nome:</b>
+            <label id='financeiroNome'>Teste</label>
+
+            <br>
+            <b>Valor:</b>
+            <label id='financeiroValor'>Teste</label>
+
+        </div>
+
+    </form>
+
+    <br>
+    <h2>Histórico</h2>
+
+    <form id='historico' style='display: flex; flex-direction: column; padding: 5px;'>
+
+        <div id='historicoExample' style='margin: 5px'>
+
+            <b>Endereço:</b>
+            <label id='enderecoHistorico'>Teste</label>
+
+            <br>
+            <b>Preço:</b>
+            <label id='precoHistorico'>Teste</label>
+
+            <br>
+            <b>Motoboy:</b>
+            <label id='motoboyHistorico'>Teste</label>
+
+            <br>
+            <b>Identificação:</b>
+            <label id='identificarHistorico'>Teste</label>
+
+            <br>
+            <input type='button' value='Remover' id='removerExemploHistorico'>
+
+        </div>
+
+    </form>
+
+    <script defer>
+
+        // Feedback
+        const timer = ms => new Promise( res => setTimeout(res, ms));
+
+        // Preço por Kilometro
+        const prices = [
+            {dist: 1000, price: 5},
+            {dist: 5000, price: 5},
+            {dist: 6000, price: 6},
+            {dist: 7000, price: 7},
+            {dist: 8000, price: 8},
+        ]
+
+        function EncontrarPreco( dist ) {
+            for ( let i = 1; i < prices.length; i++ ) {
+
+                let precoAnterior = prices[i - 1]
+                let precoAtual = prices[i]
+
+                if ( dist >= precoAnterior.dist && dist <= precoAtual.dist ) {
+                    return precoAtual.price
+                }
+            }
+        }
+
+        // Processar Localização
+        const pesquisar = document.getElementById('pesquisar')
+
+        const endereco = document.getElementById('endereco')
+        const preco = document.getElementById('preco')
+        const distancia = document.getElementById('distancia')
+
+        function Pesquisar() {
+
+            const cepAlvo = document.getElementById('inputCEP').value
+            const rota = "http://localhost:25565/cep?alvo=" + cepAlvo
+
+            fetch(rota)
+            .then(response => response.json())
+            .then(data => {
+
+                if ( data.status != "OK" ) {
+                    pesquisar.value = "CEP Inválido!"
+                    timer(2000).then( _ => pesquisar.value = "Pesquisar")
+                    return;
+                } else {
+                    pesquisar.value = "Endereço Encontrado!"
+                    timer(2000).then( _ => pesquisar.value = "Pesquisar")
+                }
+
+                endereco.innerHTML = data.address
+                distancia.innerHTML = data.distanceText
+
+                console.log(data)
+
+                // Calculando Preço
+                let precoFinal = EncontrarPreco( data.distanceValue )
+                preco.innerHTML = "R$ " + precoFinal + ",00"
+                
+            })
+
+        }
+
+        pesquisar.addEventListener('click', Pesquisar)
+
+        // Data Financeira
+        const data = {}
+
+        // Encontrar Exemplos
+        const financeiroExample = document.getElementById('financeiroExample')
+        const historicoExample = document.getElementById('historicoExample')
+
+        const historico = document.getElementById('historico')
+        const financeiro = document.getElementById('financeiro')
+
+        financeiroExample.remove()
+        historicoExample.remove()
+
+        // Criar Nova Entry
+        function CriarHistorico() {
+
+            // Puxar Informação
+            const cep = document.getElementById('inputCEP').value
+            const motoboy = document.getElementById('inputMotoboy').value
+            const endereco = document.getElementById('endereco').innerHTML
+            const preco = document.getElementById('preco').innerHTML
+            const identificar = document.getElementById('inputIdentificar').value
+
+            // Criar entrada no histórico
+            const novaEntrada = historicoExample.cloneNode(true)
+
+            novaEntrada.querySelector('#motoboyHistorico').innerText = motoboy
+            novaEntrada.querySelector('#enderecoHistorico').innerText = endereco
+            novaEntrada.querySelector('#precoHistorico').innerText = preco
+            novaEntrada.querySelector('#identificarHistorico').innerText = identificar || "Nenhuma"
+
+            // Remover
+            novaEntrada.querySelector('#removerExemploHistorico').addEventListener('click', function () {
+                novaEntrada.remove()
+            })
+
+            historico.appendChild(novaEntrada)
+
+        }
+
+        // Hooks
+        const confirmarOperacao = document.getElementById('confirmar')
+        confirmarOperacao.addEventListener('click', CriarHistorico)
+
+    </script>
+
+</body>
+
+</html>
