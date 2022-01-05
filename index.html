@@ -54,12 +54,16 @@
 
         <div id='financeiroExample' style='margin: 5px;'>
 
-            <b>Nome:</b>
+            <b>Motoboy:</b>
             <label id='financeiroNome'>Teste</label>
 
             <br>
             <b>Valor:</b>
             <label id='financeiroValor'>Teste</label>
+
+            <br>
+            <b>Entregas:</b>
+            <label id='financeiroEntregas'>Teste</label>
 
         </div>
 
@@ -106,7 +110,12 @@
             {dist: 6000, price: 6},
             {dist: 7000, price: 7},
             {dist: 8000, price: 8},
+            {dist: 9000, price: 9},
+            {dist: 10000, price: 10},
         ]
+
+        // Globals
+        let precoFinal = 0
 
         function EncontrarPreco( dist ) {
             for ( let i = 1; i < prices.length; i++ ) {
@@ -118,6 +127,9 @@
                     return precoAtual.price
                 }
             }
+
+            return prices[prices.length - 1].price
+
         }
 
         // Processar Localização
@@ -151,7 +163,7 @@
                 console.log(data)
 
                 // Calculando Preço
-                let precoFinal = EncontrarPreco( data.distanceValue )
+                precoFinal = EncontrarPreco( data.distanceValue )
                 preco.innerHTML = "R$ " + precoFinal + ",00"
                 
             })
@@ -161,7 +173,7 @@
         pesquisar.addEventListener('click', Pesquisar)
 
         // Data Financeira
-        const data = {}
+        const dataFinanceira = {}
 
         // Encontrar Exemplos
         const financeiroExample = document.getElementById('financeiroExample')
@@ -183,6 +195,35 @@
             const preco = document.getElementById('preco').innerHTML
             const identificar = document.getElementById('inputIdentificar').value
 
+            // Parte Financeira
+            // Atualização de Raw Data
+
+            let entry = dataFinanceira[motoboy] || { entregas: 0, valor: 0 } ; dataFinanceira[motoboy] = entry
+            entry.entregas += 1
+            entry.valor += precoFinal
+
+            // Atualização Visual
+            // Caso já exista um visual
+            let visual = financeiro.querySelector('#'+motoboy)
+
+            if (visual) {
+
+                visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
+                visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
+
+            } else {
+
+                visual = financeiroExample.cloneNode(true)
+                financeiro.appendChild(visual)
+
+                visual.id = motoboy
+
+                visual.querySelector('#financeiroNome').innerHTML = motoboy
+                visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
+                visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
+
+            }
+
             // Criar entrada no histórico
             const novaEntrada = historicoExample.cloneNode(true)
 
@@ -193,7 +234,21 @@
 
             // Remover
             novaEntrada.querySelector('#removerExemploHistorico').addEventListener('click', function () {
+
                 novaEntrada.remove()
+
+                // Update Raw Data
+                entry.valor -= precoFinal
+                entry.entregas -= 1
+
+                // Update Visual
+                visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
+                visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
+
+                if ( entry.valor <= 0 ) {
+                    visual.remove()
+                }
+
             })
 
             historico.appendChild(novaEntrada)
