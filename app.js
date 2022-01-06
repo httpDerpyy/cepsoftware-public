@@ -8,7 +8,7 @@ const res = require('express/lib/response')
 const app = express()
 const port = 25565
 
-const cepFlashback = "07094000"
+const cepFlashback = "-23.4594742,-46.5365758"
 
 app.get("/", ( request, response ) => {
     response.sendFile( path.join(__dirname, 'index.html') )
@@ -52,6 +52,11 @@ app.get("/cep", ( request, res ) => {
             .then( response => response.json() )
             .then( data => {
         
+                if ( data.routes[0] == undefined ) {
+                    res.send({status: "ERROR"})
+                    return;
+                }
+
                 responseData.distanceText = data.routes[0].legs[0].distance.text
                 responseData.distanceValue = data.routes[0].legs[0].distance.value
                 responseData.status = "OK"
