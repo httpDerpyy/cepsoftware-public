@@ -101,34 +101,34 @@
     <script defer>
 
         // Feedback
-        const timer = ms => new Promise( res => setTimeout(res, ms));
+        const timer = ms => new Promise(res => setTimeout(res, ms));
 
         // Preço por Kilometro
         const prices = [
-            {dist: 1000, price: 5},
-            {dist: 5000, price: 5},
-            {dist: 6000, price: 6},
-            {dist: 7000, price: 7},
-            {dist: 8000, price: 8},
-            {dist: 9000, price: 9},
-            {dist: 10000, price: 10},
+            { dist: 1000, price: 5 },
+            { dist: 1500, price: 6 },
+            { dist: 2000, price: 7 },
+            // { dist: 2500, price: 8 },
+            // { dist: 3000, price: 9 },
+            // { dist: 3500, price: 10 },
+            // { dist: 4000, price: 11 },
         ]
 
         // Globals
         let precoFinal = 0
 
-        function EncontrarPreco( dist ) {
-            for ( let i = 1; i < prices.length; i++ ) {
+        function EncontrarPreco(dist) {
+            for (let i = 1; i < prices.length; i++) {
 
                 let precoAnterior = prices[i - 1]
                 let precoAtual = prices[i]
 
-                if ( dist >= precoAnterior.dist && dist <= precoAtual.dist ) {
-                    return precoAtual.price
+                if (dist >= precoAnterior.dist && dist <= precoAtual.dist) {
+                    return precoAnterior.price
                 }
             }
 
-            if ( dist <= prices[0].dist ) {
+            if (dist <= prices[0].dist) {
                 return prices[0].price
             }
 
@@ -146,31 +146,31 @@
         function Pesquisar() {
 
             const cepAlvo = document.getElementById('inputCEP').value
-            const rota = "http://localhost:25565/cep?alvo=" + cepAlvo
+            const rota = "http://187.182.179.245:25565/cep?alvo=" + cepAlvo
 
             fetch(rota)
-            .then(response => response.json())
-            .then(data => {
+                .then(response => response.json())
+                .then(data => {
 
-                if ( data.status != "OK" ) {
-                    pesquisar.value = "CEP Inválido!"
-                    timer(2000).then( _ => pesquisar.value = "Pesquisar")
-                    return;
-                } else {
-                    pesquisar.value = "Endereço Encontrado!"
-                    timer(2000).then( _ => pesquisar.value = "Pesquisar")
-                }
+                    if (data.status != "OK") {
+                        pesquisar.value = "CEP Inválido!"
+                        timer(2000).then(_ => pesquisar.value = "Pesquisar")
+                        return;
+                    } else {
+                        pesquisar.value = "Endereço Encontrado!"
+                        timer(2000).then(_ => pesquisar.value = "Pesquisar")
+                    }
 
-                endereco.innerHTML = data.address
-                distancia.innerHTML = data.distanceText
+                    endereco.innerHTML = data.address
+                    distancia.innerHTML = data.distanceText
 
-                console.log(data)
+                    console.log(data)
 
-                // Calculando Preço
-                precoFinal = EncontrarPreco( data.distanceValue )
-                preco.innerHTML = "R$ " + precoFinal + ",00"
-                
-            })
+                    // Calculando Preço
+                    precoFinal = EncontrarPreco(data.distanceValue)
+                    preco.innerHTML = "R$ " + precoFinal + ",00"
+
+                })
 
         }
 
@@ -202,13 +202,13 @@
             // Parte Financeira
             // Atualização de Raw Data
 
-            let entry = dataFinanceira[motoboy] || { entregas: 0, valor: 0 } ; dataFinanceira[motoboy] = entry
+            let entry = dataFinanceira[motoboy] || { entregas: 0, valor: 0 }; dataFinanceira[motoboy] = entry
             entry.entregas += 1
             entry.valor += precoFinal
 
             // Atualização Visual
             // Caso já exista um visual
-            let visual = financeiro.querySelector('#'+motoboy)
+            let visual = financeiro.querySelector('#' + motoboy)
 
             if (visual) {
 
@@ -249,7 +249,7 @@
                 visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
                 visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
 
-                if ( entry.valor <= 0 ) {
+                if (entry.valor <= 0) {
                     visual.remove()
                 }
 
