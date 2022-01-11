@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,24 +7,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEP Software</title>
 
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 0 3px;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+
 </head>
 
 <body>
+
+    <ul>
+        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
+        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
+        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
+    </ul>
 
     <h1>Calculadora Frete</h1>
 
     <form style='display: flex; flex-direction: column; margin-right: 93%;'>
 
-        <label>CEP</label>
-        <input type='number' id='inputCEP'>
-
-        <br><br>
         <label>Motoboy</label>
         <input type='text' id='inputMotoboy'>
 
         <br><br>
+        <label>CEP</label>
+        <input type='text' id='inputCEP' onclick='this.value=""'>
+
+        <br><br>
         <label>Identificação</label>
-        <input type='text' id='inputIdentificar'>
+        <input type='text' id='inputIdentificar' onclick='this.value=""'>
 
         <br>
         <input type='button' value='Pesquisar' id='pesquisar'>
@@ -50,53 +74,46 @@
     <br><br>
     <h2>Financeiro</h2>
 
-    <form id='financeiro' style='display: flex; flex-direction: column; padding: 5px;'>
+    <table id='financeiro' style='margin-bottom: 20px;'>
 
-        <div id='financeiroExample' style='margin: 5px;'>
+        <tr>
+            <th>Motoboy</th>
+            <th>Entregas</th>
+            <th>Diaria</th>
+            <th>Total</th>
+        </tr>
 
-            <b>Motoboy:</b>
-            <label id='financeiroNome'>Teste</label>
+        <tr id='financeiroExample'>
+            <td id='financeiroNome'>1000</td>
+            <td id='financeiroEntregas'>R$ 5,00</td>
+            <td id='financeiroDiaria'>R$ 5,00</td>
+            <td id='financeiroValor'>R$ 5,00</td>
+        </tr>
 
-            <br>
-            <b>Valor:</b>
-            <label id='financeiroValor'>Teste</label>
-
-            <br>
-            <b>Entregas:</b>
-            <label id='financeiroEntregas'>Teste</label>
-
-        </div>
-
-    </form>
+    </table>
 
     <br>
     <h2>Histórico</h2>
 
-    <form id='historico' style='display: flex; flex-direction: column; padding: 5px;'>
+    <table id='historico' style='margin-bottom: 20px;'>
 
-        <div id='historicoExample' style='margin: 5px'>
+        <tr>
+            <th>Endereço</th>
+            <th>Preço</th>
+            <th>Motoboy</th>
+            <th>Identificação</th>
+            <th>Remover</th>
+        </tr>
 
-            <b>Endereço:</b>
-            <label id='enderecoHistorico'>Teste</label>
+        <tr id='historicoExample'>
+            <td id='enderecoHistorico'>1000</td>
+            <td id='precoHistorico'>R$ 5,00</td>
+            <td id='motoboyHistorico'>R$ 5,00</td>
+            <td id='identificarHistorico'>R$ 5,00</td>
+            <td><input type='button' value='Remover' id='removerExemploHistorico'></td>
+        </tr>
 
-            <br>
-            <b>Preço:</b>
-            <label id='precoHistorico'>Teste</label>
-
-            <br>
-            <b>Motoboy:</b>
-            <label id='motoboyHistorico'>Teste</label>
-
-            <br>
-            <b>Identificação:</b>
-            <label id='identificarHistorico'>Teste</label>
-
-            <br>
-            <input type='button' value='Remover' id='removerExemploHistorico'>
-
-        </div>
-
-    </form>
+    </table>
 
     <script defer>
 
@@ -104,15 +121,25 @@
         const timer = ms => new Promise(res => setTimeout(res, ms));
 
         // Preço por Kilometro
-        const prices = [
-            { dist: 1000, price: 5 },
-            { dist: 1500, price: 6 },
-            { dist: 2000, price: 7 },
-            // { dist: 2500, price: 8 },
-            // { dist: 3000, price: 9 },
-            // { dist: 3500, price: 10 },
-            // { dist: 4000, price: 11 },
-        ]
+        let prices = undefined
+        let data_motoboys = undefined
+
+        // Data Financeira
+        const dataFinanceira = {}
+
+        fetch('http://187.182.179.245:25565/data')
+        .then(response => response.json())
+        .then(data => {
+
+            prices = data.Metragens
+            data_motoboys = data.Motoboys 
+
+            data_motoboys.forEach(element => {
+                let entry = dataFinanceira[element.Nome] || { entregas: 0, valor: Number(element.Diaria) } ; dataFinanceira[element.Nome] = entry ;
+                entry.Diaria = Number(element.Diaria)
+            });
+
+        })
 
         // Globals
         let precoFinal = 0
@@ -123,17 +150,16 @@
                 let precoAnterior = prices[i - 1]
                 let precoAtual = prices[i]
 
-                if (dist >= precoAnterior.dist && dist <= precoAtual.dist) {
-                    return precoAnterior.price
+                if (dist >= (precoAnterior.Metragem) && dist <= precoAtual.Metragem) {
+                    return precoAnterior.Valor
                 }
             }
 
-            if (dist <= prices[0].dist) {
-                return prices[0].price
+            if (dist <= prices[0].Metragem) {
+                return prices[0].Valor
             }
 
-            return prices[prices.length - 1].price
-
+            return prices[prices.length - 1].Valor
         }
 
         // Processar Localização
@@ -145,7 +171,14 @@
 
         function Pesquisar() {
 
-            const cepAlvo = document.getElementById('inputCEP').value
+            let cepAlvo = document.getElementById('inputCEP').value
+
+            // Remover Tracinhos
+            cepAlvo = cepAlvo.toString()
+            cepAlvo = cepAlvo.replace("-", "")
+
+            console.log(cepAlvo)
+
             const rota = "http://187.182.179.245:25565/cep?alvo=" + cepAlvo
 
             fetch(rota)
@@ -171,13 +204,9 @@
                     preco.innerHTML = "R$ " + precoFinal + ",00"
 
                 })
-
         }
 
         pesquisar.addEventListener('click', Pesquisar)
-
-        // Data Financeira
-        const dataFinanceira = {}
 
         // Encontrar Exemplos
         const financeiroExample = document.getElementById('financeiroExample')
@@ -195,7 +224,7 @@
             // Puxar Informação
             const cep = document.getElementById('inputCEP').value
             const motoboy = document.getElementById('inputMotoboy').value
-            const endereco = document.getElementById('endereco').innerHTML
+            let endereco = document.getElementById('endereco').innerHTML
             const preco = document.getElementById('preco').innerHTML
             const identificar = document.getElementById('inputIdentificar').value
 
@@ -204,7 +233,7 @@
 
             let entry = dataFinanceira[motoboy] || { entregas: 0, valor: 0 }; dataFinanceira[motoboy] = entry
             entry.entregas += 1
-            entry.valor += precoFinal
+            entry.valor += Number(precoFinal)
 
             // Atualização Visual
             // Caso já exista um visual
@@ -225,6 +254,7 @@
                 visual.querySelector('#financeiroNome').innerHTML = motoboy
                 visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
                 visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
+                visual.querySelector('#financeiroDiaria').innerHTML = "R$ " + entry.Diaria + ",00"
 
             }
 
@@ -249,7 +279,7 @@
                 visual.querySelector('#financeiroValor').innerHTML = "R$ " + entry.valor + ",00"
                 visual.querySelector('#financeiroEntregas').innerHTML = entry.entregas
 
-                if (entry.valor <= 0) {
+                if (entry.valor <= 0 || entry.entregas <= 0) {
                     visual.remove()
                 }
 

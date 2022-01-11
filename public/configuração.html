@@ -1,0 +1,276 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP Software</title>
+
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 0 3px;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Lista -->
+    <ul>
+        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
+        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
+        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
+    </ul>
+
+    <h2>Motoboys</h2>
+
+    <!-- Motoboys -->
+    <table id='motoboys' style='margin-bottom: 20px;'>
+
+        <tr>
+            <th>Motoboy</th>
+            <th>Diaria</th>
+            <th>Remover</th>
+        </tr>
+
+        <tr id='motoboyExample'>
+            <td id='nome'>Rafael</td>
+            <td id='diaria'>R$ 30,00</td>
+            <td> <button id='remover'>Remover</button> </td>
+        </tr>
+
+    </table>
+
+    <input placeholder='Nome do Motoboy' id='nomeMotoboy'>
+    <input placeholder='Diaria' id='diariaMotoboy'>
+    <button type="button" id='adicionarMotoboy'>Adicionar</button>
+
+    <br><br><br>
+    <h2>Metragem</h2>
+
+    <!-- Metragem -->
+    <table id='metragem' style='margin-bottom: 20px;'>
+
+        <tr>
+            <th>Metragem</th>
+            <th>Valor</th>
+            <th>Remover</th>
+        </tr>
+
+        <tr id='metragemExample'>
+            <td id='valor-metragem'>1000</td>
+            <td id='valor-custo-metragem'>R$ 5,00</td>
+            <td> <button id='remover'>Remover</button> </td>
+        </tr>
+
+    </table>
+
+    <input placeholder='Metragem (1 KM = 1000 M)' id='metragem-valor-input' onclick='this.value=""'>
+    <input placeholder='Valor' id='metragem-custo-input' onclick='this.value=""'>
+    <button type="button" id='metragem-adicionar'>Adicionar</button>
+
+    <br><br><br>
+    <button type='button' id='aplicar-alteracoes'>Salvar Alterações</button>
+
+    <!-- Código -->
+    <script defer>
+
+        // Feedback
+        const timer = ms => new Promise(res => setTimeout(res, ms));
+
+        // Pegar Examples
+        const listaMotoboy = document.getElementById('motoboys')
+        const listaMetragem = document.getElementById('metragem')
+
+        const motoboyExample = document.getElementById('motoboyExample')
+        const metragemExample = document.getElementById('metragemExample')
+
+        motoboyExample.remove()
+        metragemExample.remove()
+
+        // Data
+        let motoboys = []
+        let metragens = []
+
+        function CarregarData() {
+            fetch('http://187.182.179.245:25565/data').then(response => response.json()).then(data => {
+
+                console.log(data)
+
+                motoboys = data.Motoboys
+                metragens = data.Metragens
+
+                // Recriar Cache
+                motoboys.forEach(element => {
+                    AdicionarMotoboy(undefined, element.Nome, element.Diaria)
+                });
+
+                metragens.forEach(element => {
+                    AdicionarMetragem(undefined, element.Metragem, element.Valor)
+                })
+
+            })
+        }
+
+        CarregarData();
+
+        // Funções
+        function AdicionarMotoboy(pointer, _nome, _diaria) {
+
+            const nome = document.getElementById('nomeMotoboy').value || _nome
+            const diaria = document.getElementById('diariaMotoboy').value || _diaria
+
+            if (nome == undefined || diaria == undefined) {
+                adicionar.innerHTML = 'Preencha os Campos!'
+                timer(2000).then(_ => { adicionar.innerHTML = 'Adicionar' })
+                return;
+            }
+
+            // Criar objeto
+            let entry = undefined
+
+            if (_nome == undefined) {
+                entry = { Nome: nome, Diaria: diaria }
+                motoboys.push(entry)
+            } else {
+                entry = motoboys.find(element => { element.Nome == nome })
+            }
+
+            // Visual
+            let novo = motoboyExample.cloneNode(true)
+            listaMotoboy.appendChild(novo)
+            novo.id = nome
+
+            novo.querySelector('#nome').innerHTML = nome
+            novo.querySelector('#diaria').innerHTML = "R$ " + diaria + ",00"
+
+            // Removendo Entry
+            function RemoverEntry() {
+
+                // Remover Data
+                motoboys.pop(motoboys.indexOf(entry))
+
+                // Remover Visual
+                novo.remove()
+
+            }
+
+            novo.querySelector('#remover').addEventListener('click', RemoverEntry)
+
+        }
+
+        let metragem_visual = []
+        function AdicionarMetragem(pointer, _metragem, _valor) {
+
+            const metragem = document.getElementById('metragem-valor-input').value || _metragem
+            const valor = document.getElementById('metragem-custo-input').value || _valor
+
+            if (metragem == undefined || valor == undefined) {
+
+                adicionarMetragem.innerHTML = "Preencha todos os campos!"
+                timer(2000).then(_ => adicionarMetragem.innerHTML = "Adicionar")
+                return;
+
+            }
+
+            let entry;
+
+            if (_metragem == undefined) {
+                entry = { Metragem: metragem, Valor: valor }
+                metragens.push(entry)
+            } else {
+                entry = metragens.find(element => { element.Metragem == metragem })
+            }
+
+            // Remove todos os membros da tabela
+            metragem_visual.forEach(el => {
+                el.remove()
+            })
+
+            // Organiza o array em ordem crescente
+            metragens.sort((a, b) => { return a.Metragem - b.Metragem })
+
+            // Por fim cria a parte visual novamente
+            metragens.forEach(element => {
+
+                const novo = metragemExample.cloneNode(true)
+                listaMetragem.appendChild(novo)
+
+                novo.querySelector('#valor-metragem').innerHTML = (element.Metragem / 1000) + " km"
+                novo.querySelector('#valor-custo-metragem').innerHTML = "R$ " + element.Valor + ",00"
+
+                metragem_visual.push(novo)
+
+                function RemoverEntry() {
+
+                    metragem_visual.pop( metragem_visual.indexOf( novo ) )
+                    novo.remove()
+
+                    metragens.pop(entry)
+
+                }
+
+                novo.querySelector('#remover').addEventListener('click', RemoverEntry)
+
+            })
+
+        }
+
+        function SalvarData() {
+
+            const api = "http://187.182.179.245:25565/data"
+
+            fetch(api, {
+                method: "POST",
+                body: JSON.stringify({
+                    Motoboys: motoboys,
+                    Metragens: metragens,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    console.log(data)
+
+                    if (data.status != "OK") {
+                        salvar.innerHTML = "Ocorreu um erro ao salvar as configurações!"
+                        timer(2000).then(_ => { salvar.innerHTML = "Salvar Alterações" })
+                        return;
+                    } else {
+                        salvar.innerHTML = "Alterações salvas com sucesso!"
+                        timer(2000).then(_ => { salvar.innerHTML = "Salvar Alterações" })
+                        return;
+                    }
+
+                })
+
+        }
+
+        // Hooks
+        const adicionar = document.getElementById('adicionarMotoboy')
+        adicionar.addEventListener('click', AdicionarMotoboy)
+
+        const salvar = document.getElementById('aplicar-alteracoes')
+        salvar.addEventListener('click', SalvarData)
+
+        const adicionarMetragem = document.getElementById('metragem-adicionar')
+        adicionarMetragem.addEventListener('click', AdicionarMetragem)
+
+    </script>
+
+</body>
+
+</html>

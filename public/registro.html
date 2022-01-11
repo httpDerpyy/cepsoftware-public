@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP Software</title>
+</head>
+
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        margin-right: 80%;
+        padding: 5px;
+    }
+
+    .list-item {
+        margin: 5px
+    }
+</style>
+
+<body>
+
+    <ul>
+        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
+        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
+        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
+    </ul>
+
+    <h1>Registro de CEP</h1>
+
+    <form>
+        <input class='list-item' type='number' placeholder='CEP (Sem Tracinho)' id='input-cep'>
+        <input class='list-item' type='text' placeholder='Endereço do CEP' id='input-endereco'>
+        <input class='list-item' type='number' placeholder='Distância em metros da origem' id='input-distancia'>
+        <button class='list-item' id='button-confirmar' type='button'>Confirmar</button>
+    </form>
+
+    <script defer>
+
+        // Funções
+        const timer = ms => new Promise(res => setTimeout(res, ms));
+
+        function AdicionarCEP() {
+
+            const cep = document.getElementById('input-cep').value
+            const endereco = document.getElementById('input-endereco').value
+            const distancia = document.getElementById('input-distancia').value
+
+            if (!cep || !endereco || !distancia) {
+                adicionar.innerHTML = "Preencha todos os campos!"
+                timer(2000).then(_ => adicionar.innerHTML = "Registrar CEP")
+                return;
+            }
+
+            let kmDist = Number(distancia)
+            kmDist /= 1000
+            kmDist = kmDist.toString()
+            kmDist = kmDist + " km"
+
+            let package = { address: endereco, distanceValue: Number(distancia), distanceText: kmDist, cep: Number(cep) }
+
+            fetch('http://187.182.179.245:25565/registroCEP', {
+                method: "POST",
+                body: JSON.stringify({ Package: package }),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.status != "OK") {
+                        adicionar.innerHTML = "Ocorreu um erro ao registrar esse CEP."
+                        timer(2000).then(_ => adicionar.innerHTML = "Registrar CEP")
+                        return;
+                    } else {
+                        adicionar.innerHTML = "CEP Registrado com sucesso!"
+                        timer(2000).then(_ => adicionar.innerHTML = "Registrar CEP")
+                        return;
+                    }
+
+                })
+        }
+
+        // Hooks
+        const adicionar = document.getElementById('button-confirmar')
+        adicionar.addEventListener('click', AdicionarCEP)
+
+    </script>
+
+</body>
+
+</html>
