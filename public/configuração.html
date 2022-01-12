@@ -6,7 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEP Software</title>
 
+    <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
+    <link href="./navbar.css" rel='stylesheet'>
+
     <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         table {
             border-collapse: separate;
             border-spacing: 0 3px;
@@ -22,68 +32,89 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+
     </style>
 
 </head>
 
 <body>
 
-    <!-- Lista -->
-    <ul>
-        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
-        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
-        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
-    </ul>
+    <!-- Sidebar -->
+    <nav id='side-bar'>
+        <ul id='side-bar-list'>
 
-    <h2>Motoboys</h2>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
+            </li>
 
-    <!-- Motoboys -->
-    <table id='motoboys' style='margin-bottom: 20px;'>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/config' class='side-bar-link'> <i class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
+            </li>
 
-        <tr>
-            <th>Motoboy</th>
-            <th>Diaria</th>
-            <th>Remover</th>
-        </tr>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/registro' class='side-bar-link'> <i class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span> </a>
+            </li>
 
-        <tr id='motoboyExample'>
-            <td id='nome'>Rafael</td>
-            <td id='diaria'>R$ 30,00</td>
-            <td> <button id='remover'>Remover</button> </td>
-        </tr>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/imprimir' class='side-bar-link'> <i class="fas fa-print side-icon"></i> <span class='link-text-display'>Imprimir</span> </a>
+            </li>
 
-    </table>
+        </ul>
+    </nav>
 
-    <input placeholder='Nome do Motoboy' id='nomeMotoboy'>
-    <input placeholder='Diaria' id='diariaMotoboy'>
-    <button type="button" id='adicionarMotoboy'>Adicionar</button>
+    <div class='page-body'>
 
-    <br><br><br>
-    <h2>Metragem</h2>
+        <h2>Motoboys</h2>
 
-    <!-- Metragem -->
-    <table id='metragem' style='margin-bottom: 20px;'>
+        <!-- Motoboys -->
+        <table id='motoboys' style='margin-bottom: 20px;'>
 
-        <tr>
-            <th>Metragem</th>
-            <th>Valor</th>
-            <th>Remover</th>
-        </tr>
+            <tr>
+                <th>Motoboy</th>
+                <th>Diaria</th>
+                <th>Remover</th>
+            </tr>
 
-        <tr id='metragemExample'>
-            <td id='valor-metragem'>1000</td>
-            <td id='valor-custo-metragem'>R$ 5,00</td>
-            <td> <button id='remover'>Remover</button> </td>
-        </tr>
+            <tr id='motoboyExample'>
+                <td id='nome'>Rafael</td>
+                <td id='diaria'>R$ 30,00</td>
+                <td> <button id='remover'>Remover</button> </td>
+            </tr>
 
-    </table>
+        </table>
 
-    <input placeholder='Metragem (1 KM = 1000 M)' id='metragem-valor-input' onclick='this.value=""'>
-    <input placeholder='Valor' id='metragem-custo-input' onclick='this.value=""'>
-    <button type="button" id='metragem-adicionar'>Adicionar</button>
+        <input placeholder='Nome do Motoboy' id='nomeMotoboy'>
+        <input placeholder='Diaria' id='diariaMotoboy'>
+        <button type="button" id='adicionarMotoboy'>Adicionar</button>
 
-    <br><br><br>
-    <button type='button' id='aplicar-alteracoes'>Salvar Alterações</button>
+        <br><br><br>
+        <h2>Metragem</h2>
+
+        <!-- Metragem -->
+        <table id='metragem' style='margin-bottom: 20px;'>
+
+            <tr>
+                <th>Metragem</th>
+                <th>Valor</th>
+                <th>Remover</th>
+            </tr>
+
+            <tr id='metragemExample'>
+                <td id='valor-metragem'>1000</td>
+                <td id='valor-custo-metragem'>R$ 5,00</td>
+                <td> <button id='remover'>Remover</button> </td>
+            </tr>
+
+        </table>
+
+        <input placeholder='Metragem (1 KM = 1000 M)' id='metragem-valor-input' onclick='this.value=""'>
+        <input placeholder='Valor' id='metragem-custo-input' onclick='this.value=""'>
+        <button type="button" id='metragem-adicionar'>Adicionar</button>
+
+        <br><br><br>
+        <button type='button' id='aplicar-alteracoes'>Salvar Alterações</button>
+
+    </div>
 
     <!-- Código -->
     <script defer>
@@ -216,7 +247,7 @@
 
                 function RemoverEntry() {
 
-                    metragem_visual.pop( metragem_visual.indexOf( novo ) )
+                    metragem_visual.pop(metragem_visual.indexOf(novo))
                     novo.remove()
 
                     metragens.pop(entry)

@@ -1,0 +1,105 @@
+:root {
+    font-family: "Open Sans";
+    --navbar-size: 15vw;
+    --navbar-close-size: 6vw;
+}
+
+@media print {
+    .no-print {
+        display: none;
+        margin-left: 0;
+        margin-top: 0;
+        top: 0;
+        left: 0;
+    }
+    form {
+        display: none;
+    }
+    h2 {
+        display: none;
+    }
+    label {
+        display: none;
+    }
+    input {
+        display: none;
+    }
+    b {
+        display: none;
+    }
+    br {
+        display: none;
+    }
+}
+
+.page-body {
+
+    margin-left: 7vw;
+    margin-top: 2vw;
+}
+
+#side-bar {
+
+    background-color: #6a2cd2;
+
+    width: var(--navbar-close-size);
+    height: 100vh;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    transition: .25s;
+
+}
+
+#side-bar:hover {
+    width: var(--navbar-size);
+}
+
+#side-bar-list {
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    list-style: none;
+
+}
+
+.side-bar-link {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    height: 3vw;
+    width: var(--navbar-close-size);
+
+    text-decoration: none;
+
+    color: white;
+
+    transition: .25s;
+
+}
+
+.side-bar-link:hover {
+    background-color: #51308a;
+    width: var(--navbar-size);
+}
+
+.side-bar-link:hover .side-icon {
+    display: none;
+}
+
+.side-bar-link:hover .link-text-display {
+    display: block;
+}
+
+.link-text-display {
+    display: none;
+}

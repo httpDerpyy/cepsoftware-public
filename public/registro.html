@@ -6,37 +6,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEP Software</title>
+
+    <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
+    <link href="./navbar.css" rel='stylesheet'/>
+
 </head>
 
 <style>
+    
     form {
         display: flex;
         flex-direction: column;
-        margin-right: 80%;
+        margin-right: 75%;
         padding: 5px;
     }
 
     .list-item {
         margin: 5px
     }
+
 </style>
 
 <body>
 
-    <ul>
-        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
-        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
-        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
-    </ul>
+    <!-- Sidebar -->
+    <nav id='side-bar'>
+        <ul id='side-bar-list'>
 
-    <h1>Registro de CEP</h1>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i
+                        class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
+            </li>
 
-    <form>
-        <input class='list-item' type='number' placeholder='CEP (Sem Tracinho)' id='input-cep'>
-        <input class='list-item' type='text' placeholder='Endereço do CEP' id='input-endereco'>
-        <input class='list-item' type='number' placeholder='Distância em metros da origem' id='input-distancia'>
-        <button class='list-item' id='button-confirmar' type='button'>Confirmar</button>
-    </form>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/config' class='side-bar-link'> <i
+                        class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
+            </li>
+
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/registro' class='side-bar-link'> <i
+                        class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span>
+                </a>
+            </li>
+
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/imprimir' class='side-bar-link'> <i class="fas fa-print side-icon"></i> <span class='link-text-display'>Imprimir</span> </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class='page-body'>
+
+        <h1>Registro de CEP</h1>
+
+        <form>
+            <input class='list-item' type='number' placeholder='CEP (Sem Tracinho)' id='input-cep'>
+            <input class='list-item' type='text' placeholder='Endereço do CEP' id='input-endereco'>
+            <input class='list-item' type='number' placeholder='Distância em metros da origem' id='input-distancia'>
+            <button class='list-item' id='button-confirmar' type='button'>Confirmar</button>
+        </form>
+
+    </div>
 
     <script defer>
 

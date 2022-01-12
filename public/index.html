@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEP Software</title>
 
+    <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet" />
+    <link href="./navbar.css" rel='stylesheet'>
+
     <style>
         table {
             border-collapse: separate;
@@ -30,90 +34,110 @@
 
 <body>
 
-    <ul>
-        <li><a href='http://187.182.179.245:25565/'>Frete</a></li>
-        <li> <a href='http://187.182.179.245:25565/config'>Configuração</a></li>
-        <li> <a href='http://187.182.179.245:25565/registro'>Registrar CEP</a></li>
-    </ul>
+    <!-- Sidebar -->
+    <nav id='side-bar' class='no-print'>
+        <ul id='side-bar-list'>
 
-    <h1>Calculadora Frete</h1>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i
+                        class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
+            </li>
 
-    <form style='display: flex; flex-direction: column; margin-right: 93%;'>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/config' class='side-bar-link'> <i
+                        class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
+            </li>
 
-        <label>Motoboy</label>
-        <input type='text' id='inputMotoboy'>
+            <li class='side-bar-item'>
+                <a href='http://187.182.179.245:25565/registro' class='side-bar-link'> <i
+                        class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class='page-body'>
+        <h1 class='no-print'>Calculadora Frete</h1>
+
+        <form class='no-print' style='display: flex; flex-direction: column; margin-right: 85%;'>
+
+            <label>Motoboy</label>
+            <input type='text' id='inputMotoboy'>
+
+            <br><br>
+            <label>CEP</label>
+            <input type='text' id='inputCEP' onclick='this.value=""'>
+
+            <br><br>
+            <label>Identificação</label>
+            <input type='text' id='inputIdentificar' onclick='this.value=""'>
+
+            <br>
+            <input type='button' value='Pesquisar' id='pesquisar'>
+
+        </form>
 
         <br><br>
-        <label>CEP</label>
-        <input type='text' id='inputCEP' onclick='this.value=""'>
+        <b>Endereço:</b>
+        <label id='endereco'>Test</label>
 
         <br><br>
-        <label>Identificação</label>
-        <input type='text' id='inputIdentificar' onclick='this.value=""'>
+        <b>Distancia:</b>
+        <label id='distancia'>Test</label>
+
+        <br><br>
+        <b>Preço:</b>
+        <label id='preco'>Test</label>
+
+        <br><br>
+        <input type='button' value='Confirmar Operação' id='confirmar'>
+
+        <br><br>
+        <h2>Financeiro</h2>
+
+        <table id='financeiro' style='margin-bottom: 20px;'>
+
+            <tr>
+                <th>Motoboy</th>
+                <th>Entregas</th>
+                <th>Diaria</th>
+                <th>Total</th>
+            </tr>
+
+            <tr id='financeiroExample'>
+                <td id='financeiroNome'>1000</td>
+                <td id='financeiroEntregas'>R$ 5,00</td>
+                <td id='financeiroDiaria'>R$ 5,00</td>
+                <td id='financeiroValor'>R$ 5,00</td>
+            </tr>
+
+        </table>
 
         <br>
-        <input type='button' value='Pesquisar' id='pesquisar'>
+        <h2>Histórico</h2>
 
-    </form>
+        <table id='historico' style='margin-bottom: 20px;'>
 
-    <br><br>
-    <b>Endereço:</b>
-    <label id='endereco'>Test</label>
+            <tr>
+                <th>Endereço</th>
+                <th>Preço</th>
+                <th>Motoboy</th>
+                <th>Identificação</th>
+                <th>Remover</th>
+            </tr>
 
-    <br><br>
-    <b>Distancia:</b>
-    <label id='distancia'>Test</label>
+            <tr id='historicoExample'>
+                <td id='enderecoHistorico'>1000</td>
+                <td id='precoHistorico'>R$ 5,00</td>
+                <td id='motoboyHistorico'>R$ 5,00</td>
+                <td id='identificarHistorico'>R$ 5,00</td>
+                <td><input type='button' value='Remover' id='removerExemploHistorico'></td>
+            </tr>
 
-    <br><br>
-    <b>Preço:</b>
-    <label id='preco'>Test</label>
+        </table>
 
-    <br><br>
-    <input type='button' value='Confirmar Operação' id='confirmar'>
-
-    <br><br>
-    <h2>Financeiro</h2>
-
-    <table id='financeiro' style='margin-bottom: 20px;'>
-
-        <tr>
-            <th>Motoboy</th>
-            <th>Entregas</th>
-            <th>Diaria</th>
-            <th>Total</th>
-        </tr>
-
-        <tr id='financeiroExample'>
-            <td id='financeiroNome'>1000</td>
-            <td id='financeiroEntregas'>R$ 5,00</td>
-            <td id='financeiroDiaria'>R$ 5,00</td>
-            <td id='financeiroValor'>R$ 5,00</td>
-        </tr>
-
-    </table>
-
-    <br>
-    <h2>Histórico</h2>
-
-    <table id='historico' style='margin-bottom: 20px;'>
-
-        <tr>
-            <th>Endereço</th>
-            <th>Preço</th>
-            <th>Motoboy</th>
-            <th>Identificação</th>
-            <th>Remover</th>
-        </tr>
-
-        <tr id='historicoExample'>
-            <td id='enderecoHistorico'>1000</td>
-            <td id='precoHistorico'>R$ 5,00</td>
-            <td id='motoboyHistorico'>R$ 5,00</td>
-            <td id='identificarHistorico'>R$ 5,00</td>
-            <td><input type='button' value='Remover' id='removerExemploHistorico'></td>
-        </tr>
-
-    </table>
+    </div>
 
     <script defer>
 
@@ -128,18 +152,18 @@
         const dataFinanceira = {}
 
         fetch('http://187.182.179.245:25565/data')
-        .then(response => response.json())
-        .then(data => {
+            .then(response => response.json())
+            .then(data => {
 
-            prices = data.Metragens
-            data_motoboys = data.Motoboys 
+                prices = data.Metragens
+                data_motoboys = data.Motoboys
 
-            data_motoboys.forEach(element => {
-                let entry = dataFinanceira[element.Nome] || { entregas: 0, valor: Number(element.Diaria) } ; dataFinanceira[element.Nome] = entry ;
-                entry.Diaria = Number(element.Diaria)
-            });
+                data_motoboys.forEach(element => {
+                    let entry = dataFinanceira[element.Nome] || { entregas: 0, valor: Number(element.Diaria) }; dataFinanceira[element.Nome] = entry;
+                    entry.Diaria = Number(element.Diaria)
+                });
 
-        })
+            })
 
         // Globals
         let precoFinal = 0
