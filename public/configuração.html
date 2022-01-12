@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
     <link href="./navbar.css" rel='stylesheet'>
+    <link rel='icon' href='./Flashback.png'>
 
     <style>
 
@@ -18,19 +19,38 @@
         }
 
         table {
-            border-collapse: separate;
+            border-collapse: collapse;
             border-spacing: 0 3px;
         }
 
-        td,
+        td {
+
+            border: 0px;
+            text-align: center;
+            padding: 12px 15px;
+
+        }
+
         th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+
+            text-align: center;
+            padding: 10px;
+            
+            background-color: rgb(85, 45, 122);
+            color: white;
+
+        }
+
+        tr {
+            border-bottom: 1px solid #dddddd;
         }
 
         tr:nth-child(even) {
             background-color: #dddddd;
+        }
+
+        tr:last-of-type {
+            border-bottom: 2px solid rgb(85, 45, 122);
         }
 
     </style>
@@ -44,6 +64,10 @@
         <ul id='side-bar-list'>
 
             <li class='side-bar-item'>
+                <img src='./Flashback.png' class='icon' width="10px" height="10px">
+            </li>
+
+            <li class='side-bar-item'>
                 <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
             </li>
 
@@ -53,10 +77,6 @@
 
             <li class='side-bar-item'>
                 <a href='http://187.182.179.245:25565/registro' class='side-bar-link'> <i class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span> </a>
-            </li>
-
-            <li class='side-bar-item'>
-                <a href='http://187.182.179.245:25565/imprimir' class='side-bar-link'> <i class="fas fa-print side-icon"></i> <span class='link-text-display'>Imprimir</span> </a>
             </li>
 
         </ul>

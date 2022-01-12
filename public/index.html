@@ -10,22 +10,42 @@
     <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet" />
     <link href="./navbar.css" rel='stylesheet'>
+    <link rel='icon' href='./Flashback.png'>
 
     <style>
         table {
-            border-collapse: separate;
+            border-collapse: collapse;
             border-spacing: 0 3px;
         }
 
-        td,
+        td {
+
+            border: 0px;
+            text-align: center;
+            padding: 12px 15px;
+
+        }
+
         th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
+            
+            text-align: center;
+            padding: 10px;
+            
+            background-color: rgb(85, 45, 122);
+            color: white;
+
+        }
+
+        tr {
+            border-bottom: 1px solid #dddddd;
         }
 
         tr:nth-child(even) {
             background-color: #dddddd;
+        }
+
+        tr:last-of-type {
+            border-bottom: 2px solid rgb(85, 45, 122);
         }
     </style>
 
@@ -37,6 +57,10 @@
     <!-- Sidebar -->
     <nav id='side-bar' class='no-print'>
         <ul id='side-bar-list'>
+
+            <li class='side-bar-item'>
+                <img src='./Flashback.png' class='icon' width="10px" height="10px">
+            </li>
 
             <li class='side-bar-item'>
                 <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i
@@ -62,19 +86,14 @@
 
         <form class='no-print' style='display: flex; flex-direction: column; margin-right: 85%;'>
 
-            <label>Motoboy</label>
-            <input type='text' id='inputMotoboy'>
-
-            <br><br>
-            <label>CEP</label>
-            <input type='text' id='inputCEP' onclick='this.value=""'>
-
-            <br><br>
-            <label>Identificação</label>
-            <input type='text' id='inputIdentificar' onclick='this.value=""'>
+            <input type='text' id='inputMotoboy' placeholder='Motoboy'>
+            <br>
+            <input type='text' id='inputCEP' onclick='this.value=""' placeholder='CEP'>
+            <br>
+            <input type='text' id='inputIdentificar' onclick='this.value=""' placeholder="Identificação">
 
             <br>
-            <input type='button' value='Pesquisar' id='pesquisar'>
+            <button type='button'id='pesquisar'>Pesquisar</button>
 
         </form>
 
@@ -91,7 +110,7 @@
         <label id='preco'>Test</label>
 
         <br><br>
-        <input type='button' value='Confirmar Operação' id='confirmar'>
+        <button type='button' id='confirmar'>Confirmar Operação</button>
 
         <br><br>
         <h2>Financeiro</h2>
@@ -124,7 +143,7 @@
                 <th>Preço</th>
                 <th>Motoboy</th>
                 <th>Identificação</th>
-                <th>Remover</th>
+                <th id='removerData'>Remover</th>
             </tr>
 
             <tr id='historicoExample'>
@@ -132,7 +151,7 @@
                 <td id='precoHistorico'>R$ 5,00</td>
                 <td id='motoboyHistorico'>R$ 5,00</td>
                 <td id='identificarHistorico'>R$ 5,00</td>
-                <td><input type='button' value='Remover' id='removerExemploHistorico'></td>
+                <td><button type='button' id='removerExemploHistorico'>Remover</button></td>
             </tr>
 
         </table>
@@ -210,12 +229,12 @@
                 .then(data => {
 
                     if (data.status != "OK") {
-                        pesquisar.value = "CEP Inválido!"
-                        timer(2000).then(_ => pesquisar.value = "Pesquisar")
+                        pesquisar.innerHTML = "CEP Inválido!"
+                        timer(2000).then(_ => pesquisar.innerHTML = "Pesquisar")
                         return;
                     } else {
-                        pesquisar.value = "Endereço Encontrado!"
-                        timer(2000).then(_ => pesquisar.value = "Pesquisar")
+                        pesquisar.innerHTML = "Endereço Encontrado!"
+                        timer(2000).then(_ => pesquisar.innerHTML = "Pesquisar")
                     }
 
                     endereco.innerHTML = data.address

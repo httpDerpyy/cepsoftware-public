@@ -1,16 +1,27 @@
 :root {
     font-family: "Open Sans";
-    --navbar-size: 15vw;
-    --navbar-close-size: 6vw;
+    --navbar-size: 200px;
+    --navbar-close-size: 100px;
 }
 
 @media print {
+
     .no-print {
         display: none;
         margin-left: 0;
         margin-top: 0;
         top: 0;
         left: 0;
+    }
+    body {
+        background-color: white !important;
+    }
+    .page-body {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+    }
+    button {
+        display: none;
     }
     form {
         display: none;
@@ -30,17 +41,30 @@
     br {
         display: none;
     }
+    #removerExemploHistorico {
+        display: none;
+    }
+    #removerData {
+        display: none;
+    }
+
+    table {
+        left: 0;
+        margin-left: 0;
+        margin-right: 50%;
+    }
+
 }
 
 .page-body {
 
-    margin-left: 7vw;
+    margin-left: 125px;
     margin-top: 2vw;
 }
 
 #side-bar {
 
-    background-color: #6a2cd2;
+    background-color: #421f80;
 
     width: var(--navbar-close-size);
     height: 100vh;
@@ -87,6 +111,12 @@
 
 }
 
+.icon {
+
+    height: calc(var(--navbar-close-size) - 25px);
+    width: calc(var(--navbar-close-size) - 25px);
+}
+
 .side-bar-link:hover {
     background-color: #51308a;
     width: var(--navbar-size);
@@ -102,4 +132,37 @@
 
 .link-text-display {
     display: none;
+}
+
+h2 {
+    border-bottom: 1px solid rebeccapurple;
+}
+
+input {
+    border-radius: .5vw;
+    border: 2px solid rebeccapurple;
+    padding: 5px;
+}
+
+button {
+    border-radius: .5vw;
+    border: 2px solid rgb(167, 30, 172);
+    padding: 5px;
+    transition: .5s;
+}
+
+button:hover {
+    border: 2px solid rgb(247, 0, 255);
+}
+
+form label {
+    border-left: 1x solid rebeccapurple;
+}
+
+body {
+    background: rgba(92, 65, 110, 0.3);
+}   
+
+table {
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
 }
