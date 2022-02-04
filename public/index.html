@@ -63,17 +63,17 @@
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://187.182.179.245:25565/' class='side-bar-link'> <i
+                <a href='http://34.82.65.98:25565/' class='side-bar-link'> <i
                         class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://187.182.179.245:25565/config' class='side-bar-link'> <i
+                <a href='http://34.82.65.98:25565/config' class='side-bar-link'> <i
                         class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://187.182.179.245:25565/registro' class='side-bar-link'> <i
+                <a href='http://34.82.65.98:25565/registro' class='side-bar-link'> <i
                         class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span>
                 </a>
             </li>
@@ -170,7 +170,7 @@
         // Data Financeira
         const dataFinanceira = {}
 
-        fetch('http://187.182.179.245:25565/data')
+        fetch('http://34.82.65.98:25565/data')
             .then(response => response.json())
             .then(data => {
 
@@ -222,7 +222,7 @@
 
             console.log(cepAlvo)
 
-            const rota = "http://187.182.179.245:25565/cep?alvo=" + cepAlvo
+            const rota = "http://34.82.65.98:25565/cep?alvo=" + cepAlvo
 
             fetch(rota)
                 .then(response => response.json())

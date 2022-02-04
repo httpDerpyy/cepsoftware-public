@@ -86,7 +86,11 @@ app.get("/cep", (req, res) => {
                                             return;
                                         }
 
-                                        responseData.address = components[1].short_name + ", " + components[2].short_name + ", " + components[6].short_name
+                                        const c1 = components[1] ? components[1] : {short_name: ""}
+                                        const c2 = components[2] ? components[2] : {short_name: ""}
+                                        const c6 = components[6] ? components[6] : {short_name: ""}
+
+                                        responseData.address = c1.short_name + ", " + c2.short_name + ", " + c6.short_name
 
                                         // Checagem de distancia
                                         const check = `https://maps.googleapis.com/maps/api/directions/json?origin=${cepFlashback}&destination=${cepAlvo}&key=AIzaSyAcUTU8IULsndQzoydzuzQkdMJFBIBzyg8`
