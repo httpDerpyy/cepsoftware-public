@@ -68,15 +68,15 @@
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://34.82.65.98:25565/' class='side-bar-link'> <i class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
+                <a href='/' class='side-bar-link'> <i class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://34.82.65.98:25565/config' class='side-bar-link'> <i class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
+                <a href='/config' class='side-bar-link'> <i class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
             </li>
 
             <li class='side-bar-item'>
-                <a href='http://34.82.65.98:25565/registro' class='side-bar-link'> <i class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span> </a>
+                <a href='/registro' class='side-bar-link'> <i class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span> </a>
             </li>
 
         </ul>
@@ -157,7 +157,7 @@
         let metragens = []
 
         function CarregarData() {
-            fetch('http://34.82.65.98:25565/data').then(response => response.json()).then(data => {
+            fetch('/data').then(response => response.json()).then(data => {
 
                 console.log(data)
 
@@ -282,7 +282,7 @@
 
         function SalvarData() {
 
-            const api = "http://34.82.65.98:25565/data"
+            const api = "/data"
 
             fetch(api, {
                 method: "POST",
