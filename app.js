@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const cors = require('cors')
 
 const app = express()
-const port = 25565
+const port = process.env.PORT || 25565;
 
 const cepFlashback = "-23.4594742,-46.5365758"
 
