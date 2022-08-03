@@ -56,9 +56,6 @@ app.get("/cep", (req, res) => {
 
                 } else { // Usar a API do Google
 
-                    // Terminar conexão com Mongo
-
-
                     // Puxar Geolocalização
                     const geo = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAcUTU8IULsndQzoydzuzQkdMJFBIBzyg8&address=" + cepAlvo
 
@@ -110,6 +107,16 @@ app.get("/cep", (req, res) => {
                                             responseData.distanceText = data.routes[0].legs[0].distance.text
                                             responseData.distanceValue = data.routes[0].legs[0].distance.value
                                             responseData.status = "OK"
+
+                                            // Salva o CEP no Mongo para evitar futuras chamadas no API
+                                            try {
+                                                responseData.cep = Number(cepAlvo)
+                                                ceps.insertOne(responseData)
+                                            } catch(e) {
+                                                console.log(e)
+                                            } finally {
+                                                console.log("CEP Salvo no Mongo")
+                                            }
 
                                             res.send(responseData)
 
