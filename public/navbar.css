@@ -76,6 +76,8 @@
 
     transition: .25s;
 
+    z-index: 2;
+
 }
 
 #side-bar:hover {
@@ -90,7 +92,6 @@
     align-items: center;
     padding: 0;
     list-style: none;
-
 }
 
 .side-bar-link {
@@ -126,6 +127,10 @@
     display: none;
 }
 
+.side-icon {
+    fill: white
+}
+
 .side-bar-link:hover .link-text-display {
     display: block;
 }
@@ -155,6 +160,8 @@ button:hover {
     border: 2px solid rgb(247, 0, 255);
 }
 
+
+
 form label {
     border-left: 1x solid rebeccapurple;
 }
@@ -165,4 +172,11 @@ body {
 
 table {
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
+}
+
+.contatos-container {
+    width: 70%;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(7, auto);
 }

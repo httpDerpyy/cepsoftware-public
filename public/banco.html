@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" class="fontawesome-i2svg-active fontawesome-i2svg-complete">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEP Software</title>
+
+    <script src="https://kit.fontawesome.com/cf6edd6e1e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
+    <link rel='icon' href='./Flashback.png'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="./navbar.css" rel='stylesheet'>
+    
+</head>
+<body>
+    
+    <nav id='side-bar'>
+        <ul id='side-bar-list'>
+            
+            <li class='side-bar-item'>
+                <img src='./Flashback.png' class='icon' width="10px" height="10px">
+            </li>
+            
+            <li class='side-bar-item'>
+                <a href='/' class='side-bar-link'> 
+                    <i class="fas fa-shipping-fast side-icon"> </i> <span class='link-text-display'>Frete</span> </a>
+                </li>
+                
+                <li class='side-bar-item'>
+                    <a href='/config' class='side-bar-link'> <i
+                        class="fas fa-user-cog side-icon"></i> <span class='link-text-display'>Configurações</span> </a>
+                    </li>
+                    
+                    <li class='side-bar-item'>
+                        <a href='/registro' class='side-bar-link'> <i
+                            class="far fa-address-card side-icon"></i> <span class='link-text-display'>Registrar CEP</span>
+                        </a>
+                    </li>
+
+            <li id="side-bar-item">
+                <a href="/banco" class="side-bar-link">
+                    <svg class="svg-inline--fa fa-w-18 side-icon" width="0%" height="0%" aria-hidden="true" data-prefix="far" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.65 28.65 0 64 0H229.5C246.5 0 262.7 6.743 274.7 18.75L365.3 109.3C377.3 121.3 384 137.5 384 154.5V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64zM336 448V160H256C238.3 160 224 145.7 224 128V48H64C55.16 48 48 55.16 48 64V448C48 456.8 55.16 464 64 464H320C328.8 464 336 456.8 336 448z"/></svg>
+                    <span class="link-text-display">Banco de Dados</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+    
+    <div class="page-body">
+        <h1>Visualizador do Banco de Dados</h1>
+        <h4 style="margin-top: 50px;">Formatar Arquivo</h4>
+        <div class="downloads-container">
+            <button type="button" class="btn btn-success">Arquivo ZapTurbo</button>
+        </div>
+        <h4 style="margin-top: 50px;">Contatos</h4>
+        <input style="margin-top: 50px; margin-bottom: 50px; width: 500px;" type="text" class="form-control pesquisar-contato" placeholder="Nome do Contato" aria-label="Contato" aria-describedby="basic-addon1">
+        <div class="contatos-container">
+            <div class="card" style="width: 18rem; background-color: rgb(145, 108, 137); display: none;">
+                <div class="card-body">
+                  <h5 class="card-title" style="color: rgb(255,255,255);">Card title</h5>
+                  <a href="#" class="btn btn-secondary" style="background-color: rgb(54, 43, 52)">Remover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        const template = document.querySelector(".card")
+        const container = document.querySelector(".contatos-container")
+        const pesquisar = document.querySelector(".pesquisar-contato")
+
+        let dataReference
+        let items = []
+
+        function pesquisarContato() {
+            items.forEach(element => {
+                if (element.querySelector(".card-title").innerHTML.toLowerCase().includes(pesquisar.value.toLowerCase())) {
+                    element.style.display = "inherit"
+                } else {
+                    element.style.display = "none"
+                }
+            })
+        }
+
+        function carregarContatos(data) {
+            data.forEach(element => {    
+                
+                const card = template.cloneNode(true)
+                card.querySelector(".card-title").innerHTML = element.title
+                card.style.display = "inherit"
+                container.appendChild(card)
+
+                items.push(card)
+
+                card.querySelector(".btn-secondary").addEventListener('click', (e) => {
+                    // Manda POST request para deletar o contato especificado
+                    fetch("/remover-contato", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            Contato: element.title,
+                        })
+                    })
+                    .then(response => response.json().then(data => {
+                        if (data.ok) {
+                            pesquisar.insertAdjacentHTML("afterend", `<div class="alert alert-success d-flex align-items-center" role="alert" style="width: 500px; height: 50px">
+                                                <div>
+                                                    O contato <strong>${element.title}</strong> foi deletado com sucesso!
+                                                </div>
+                                            </div>`)
+                            setTimeout( () => {document.querySelector(".alert").remove()}, 3000 )
+                        } else {
+                            pesquisar.insertAdjacentHTML("afterend", `<div class="alert alert-danger d-flex align-items-center" role="alert" style="width: 500px; height: 50px">
+                                                <div>
+                                                    Ocorreu um erro ao deletar o contato <strong>${element.title}</strong>.
+                                                </div>
+                                            </div>`)
+                            setTimeout( () => {document.querySelector(".alert").remove()}, 3000 )
+                        }
+                    }))
+
+                })
+
+            });
+        }
+
+        function getContatos() {
+            fetch('/contatos').then(response => {
+                response.json().then(data => {
+                    carregarContatos(data)
+                })
+            })
+        }
+
+        getContatos()
+
+        pesquisar.addEventListener('input', pesquisarContato)
+
+    </script>
+
+</body>
+</html>

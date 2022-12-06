@@ -18,7 +18,7 @@ const url = "mongodb+srv://Gabriel:shadowcat24@clusterflashback.3putl.mongodb.ne
 
 let database = null
 
-const Mongo = MongoClient.connect(url, (err, db) => {
+MongoClient.connect(url, (err, db) => {
     if (err) { console.log(err); return; }
     database = db
 })
@@ -185,7 +185,33 @@ app.get("/data", (req, res) => {
 
 })
 
+app.get("/banco", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/banco.html"))
+})
+
+app.get("/contatos", (req, res) => {
+    
+    let banco_geral = database.db('contatos')
+    let contatos = banco_geral.collection('contatoscollection')
+
+    contatos.find({}).toArray().then(format => res.send(format))
+
+})
+
 // HTTP Posts
+app.post("/remover-contato", (req, res) => {
+
+    let banco_geral = database.db('contatos')
+    let contatos = banco_geral.collection('contatoscollection')
+
+    req.on('data', (data) => {
+        data = JSON.parse(data)
+        contatos.deleteOne({title: data.Contato}).then(response => {
+            res.send({ok: response.acknowledged})
+        })
+    })
+})
+
 app.post("/data", (req, res) => {
     req.on('data', (data) => {
         data = JSON.parse(data)
