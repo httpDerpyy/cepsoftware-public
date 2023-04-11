@@ -3,6 +3,7 @@ const express = require('express')
 const path = require('path')
 const fetch = require('node-fetch')
 const cors = require('cors')
+const fs = require('fs')
 
 const app = express()
 const port = process.env.PORT || 25565;
@@ -198,6 +199,30 @@ app.get("/contatos", (req, res) => {
 
 })
 
+app.get('/download-contatos', (req, res) => {
+
+    let banco_geral = database.db('contatos')
+    let contatos = banco_geral.collection('contatoscollection')
+
+    let str = ""
+
+    contatos.find({}).toArray().then(format => {
+        format.forEach(contact => {
+            str = str + contact.title.split(" ")[1] + "," + contact.phone + "\r\n"
+        })
+        fs.writeFile("./public/contatos.txt", str, (err) => {
+            if (err) {
+                console.log(err)
+                res.send({ok: false, error: err})
+                return;
+            } else {
+                res.send({ok: true})
+                return
+            }
+        })
+    })
+
+})
 // HTTP Posts
 app.post("/remover-contato", (req, res) => {
 
@@ -210,6 +235,30 @@ app.post("/remover-contato", (req, res) => {
             res.send({ok: response.acknowledged})
         })
     })
+})
+
+app.post("/adicionar-contato", (req, res) => {
+
+    let banco_geral = database.db('contatos')
+    let contatos = banco_geral.collection('contatoscollection')
+
+    req.on('data', (data) => {
+
+        data = JSON.parse(data)
+        contatos.findOne({title: data.title}).then(document => {
+            if (document != null) {
+                contatos.updateOne({title: data.title}, {$set: {"phone": data.phone} }).then(result => {
+                    res.send({ok: result.acknowledged})
+                })
+            } else {
+                contatos.insertOne({title: data.title , phone: data.phone}).then(result => {
+                    res.send({ok: result.acknowledged})
+                })
+            }
+        })
+
+    })
+
 })
 
 app.post("/data", (req, res) => {

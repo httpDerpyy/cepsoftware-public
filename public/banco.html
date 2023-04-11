@@ -52,14 +52,21 @@
         <h1>Visualizador do Banco de Dados</h1>
         <h4 style="margin-top: 50px;">Formatar Arquivo</h4>
         <div class="downloads-container">
-            <button type="button" class="btn btn-success">Arquivo ZapTurbo</button>
+            <button type="button" class="btn btn-success download-contatos">Arquivo ZapTurbo</button>
         </div>
+        
+        <h4 style="margin-top: 50px;">Cadastrar Contato</h4>
+        <input style="margin-top: 50px; margin-bottom: 50px; width: 500px;" type="text" class="form-control nome-contato" placeholder="Nome" aria-label="Contato" aria-describedby="basic-addon1">
+        <input style="margin-top: 25px; margin-bottom: 50px; width: 500px;" type="text" class="form-control telefone-contato" placeholder="Telefone" aria-label="Contato" aria-describedby="basic-addon1">
+        <button type="button" class="btn btn-success cadastrar-contato">Cadastrar</button>
+
         <h4 style="margin-top: 50px;">Contatos</h4>
-        <input style="margin-top: 50px; margin-bottom: 50px; width: 500px;" type="text" class="form-control pesquisar-contato" placeholder="Nome do Contato" aria-label="Contato" aria-describedby="basic-addon1">
+        <input style="margin-top: 50px; margin-bottom: 50px; width: 500px;" type="text" class="form-control pesquisar-contato" placeholder="Pesquisar" aria-label="Contato" aria-describedby="basic-addon1">
         <div class="contatos-container">
             <div class="card" style="width: 18rem; background-color: rgb(145, 108, 137); display: none;">
                 <div class="card-body">
                   <h5 class="card-title" style="color: rgb(255,255,255);">Card title</h5>
+                  <h5 class="card-description" style="color: rgb(255,255,255);">Card description</h5>
                   <a href="#" class="btn btn-secondary" style="background-color: rgb(54, 43, 52)">Remover</a>
                 </div>
             </div>
@@ -71,13 +78,17 @@
         const template = document.querySelector(".card")
         const container = document.querySelector(".contatos-container")
         const pesquisar = document.querySelector(".pesquisar-contato")
+        const cadastrar = document.querySelector(".cadastrar-contato")
+        const download = document.querySelector(".download-contatos")
 
         let dataReference
         let items = []
 
+        let processandoDownload = false 
+
         function pesquisarContato() {
             items.forEach(element => {
-                if (element.querySelector(".card-title").innerHTML.toLowerCase().includes(pesquisar.value.toLowerCase())) {
+                if (element.querySelector(".card-title").innerHTML.toLowerCase().includes(pesquisar.value.toLowerCase()) || element.querySelector(".card-description").innerHTML.includes(pesquisar.value)) {
                     element.style.display = "inherit"
                 } else {
                     element.style.display = "none"
@@ -85,11 +96,37 @@
             })
         }
 
+        function adicionarContato() {
+
+            const nome = document.querySelector(".nome-contato").value
+            const telefone = document.querySelector(".telefone-contato").value
+
+            if (nome == "" || telefone == "") {
+                alert("Nome ou telefone inválido.")
+            }
+
+            fetch("/adicionar-contato", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: nome,
+                    phone: telefone,
+                })
+            })
+            .then(response => response.json().then(data => {
+                if (data.ok) {
+                    alert("Novo contato adicionado com sucesso!")
+                } else {
+                    alert("Ocorreu um erro ao adicionar o contato.")
+                }
+            }))
+        }
+
         function carregarContatos(data) {
             data.forEach(element => {    
                 
                 const card = template.cloneNode(true)
                 card.querySelector(".card-title").innerHTML = element.title
+                card.querySelector(".card-description").innerHTML = element.phone == undefined ? "SemNumero" : element.phone
                 card.style.display = "inherit"
                 container.appendChild(card)
 
@@ -134,9 +171,31 @@
             })
         }
 
+        function downloadContatos() {
+
+            if (processandoDownload) {
+                return;
+            }
+
+            processandoDownload = true
+            download.innerHTML = "Preparando arquivo..."
+
+            fetch('/download-contatos').then(response => {
+                if (response.ok) {
+                    window.location.href = "/contatos.txt"
+                } else {
+                    processandoDownload = false
+                    download.innerHTML = "Arquivo ZapTurbo"
+                }
+            })
+        }
+
         getContatos()
 
         pesquisar.addEventListener('input', pesquisarContato)
+        cadastrar.addEventListener('click', adicionarContato)
+        download.addEventListener('click', downloadContatos)
+
 
     </script>
 
