@@ -1,4 +1,6 @@
 // Server
+require('dotenv').config()
+
 const express = require('express')
 const path = require('path')
 const fetch = require('node-fetch')
@@ -8,14 +10,17 @@ const fs = require('fs')
 const app = express()
 const port = process.env.PORT || 25565;
 
-const cepFlashback = "-23.4594742,-46.5365758"
+const cepFlashback = process.env.GEOLOCATION_FLASHBACK
 
 app.use(cors())
 app.use(express.static(__dirname + '/public'))
 
+// API do Google Maps
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
+
 // Banco de Dados
 const { MongoClient } = require('mongodb');
-const url = "mongodb+srv://Gabriel:shadowcat24@clusterflashback.3putl.mongodb.net/test"
+const url = process.env.MONGODB_API_KEY
 
 let database = null
 
@@ -58,7 +63,7 @@ app.get("/cep", (req, res) => {
                 } else { // Usar a API do Google
 
                     // Puxar Geolocalização
-                    const geo = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAcUTU8IULsndQzoydzuzQkdMJFBIBzyg8&address=" + cepAlvo
+                    const geo = `https://maps.googleapis.com/maps/api/geocode/json?key=${GOOGLE_API_KEY}&address=${cepAlvo}`
 
                     fetch(geo)
                         .then(response => response.json())
@@ -74,7 +79,7 @@ app.get("/cep", (req, res) => {
                             const lat = data.results[0].geometry.location.lat
                             const lng = data.results[0].geometry.location.lng
 
-                            const geo2 = `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAcUTU8IULsndQzoydzuzQkdMJFBIBzyg8&latlng=${lat},${lng}`
+                            const geo2 = `https://maps.googleapis.com/maps/api/geocode/json?key=${GOOGLE_API_KEY}&latlng=${lat},${lng}`
 
                             fetch(geo2)
                                 .then(response => response.json())
@@ -94,7 +99,7 @@ app.get("/cep", (req, res) => {
                                     responseData.address = c1.short_name + ", " + c2.short_name + ", " + c6.short_name
 
                                     // Checagem de distancia
-                                    const check = `https://maps.googleapis.com/maps/api/directions/json?origin=${cepFlashback}&destination=${cepAlvo}&key=AIzaSyAcUTU8IULsndQzoydzuzQkdMJFBIBzyg8`
+                                    const check = `https://maps.googleapis.com/maps/api/directions/json?origin=${cepFlashback}&destination=${cepAlvo}&key=${GOOGLE_API_KEY}`
 
                                     fetch(check)
                                         .then(response => response.json())
