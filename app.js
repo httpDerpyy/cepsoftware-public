@@ -298,9 +298,6 @@ app.post("/data", (req, res) => {
 
         res.send({ status: "OK" })
 
-
-
-
     })
 
 })

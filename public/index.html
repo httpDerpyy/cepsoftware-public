@@ -182,6 +182,18 @@
             .then(data => {
 
                 prices = data.Metragens
+                prices.sort( (a, b) => {
+                    const metragemA = parseInt(a.Metragem, 10);                
+                    const metragemB = parseInt(b.Metragem, 10);                 
+                    if (metragemA < metragemB) {
+                        return -1;                  
+                    }
+                    if (metragemA > metragemB) {
+                        return 1;                  
+                    }
+                    return 0; 
+                } )
+
                 data_motoboys = data.Motoboys
 
                 data_motoboys.forEach(element => {
